@@ -22,6 +22,14 @@ export const transactions = async (app: FastifyInstance) => {
     return { transaction }
   })
 
+  app.get('/summary', async () => {
+    const summary = await knex('transactions')
+      .sum('amount', { as: 'amount' })
+      .first()
+
+    return { summary }
+  })
+
   app.post('/', async (req: FastifyRequest, res: FastifyReply) => {
     const schema = z.object({
       title: z.string(),
