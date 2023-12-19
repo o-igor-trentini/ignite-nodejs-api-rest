@@ -5,12 +5,9 @@ import { z } from 'zod'
 import { checkSessionIdExists } from './middlewares/check-session-id-exists'
 
 export const transactions = async (app: FastifyInstance) => {
-  app.addHook(
-    'preHandler',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      console.log(`[${request.method}] ${request.url}`)
-    },
-  )
+  app.addHook('preHandler', async (request: FastifyRequest) => {
+    console.log(`[${request.method}] ${request.url}`)
+  })
 
   app.get(
     '/',
