@@ -5,6 +5,13 @@ import { z } from 'zod'
 import { checkSessionIdExists } from './middlewares/check-session-id-exists'
 
 export const transactions = async (app: FastifyInstance) => {
+  app.addHook(
+    'preHandler',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      console.log(`[${request.method}] ${request.url}`)
+    },
+  )
+
   app.get(
     '/',
     { preHandler: [checkSessionIdExists] },
@@ -56,7 +63,6 @@ export const transactions = async (app: FastifyInstance) => {
       amount: z.number(),
       type: z.enum(['credit', 'debit']),
     })
-
     const { title, amount, type } = schema.parse(request.body)
 
     let sessionId = request.cookies.sessionId
