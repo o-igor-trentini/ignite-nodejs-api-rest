@@ -48,7 +48,8 @@ else
 var envSchema = import_zod.z.object({
   NODE_ENV: import_zod.z.enum(["development", "test", "production"]).default("production"),
   DB_URL: import_zod.z.string(),
-  HOST_PORT: import_zod.z.number().default(3e3)
+  DB_CLIENT: import_zod.z.enum(["sqlite", "pg"]),
+  HOST_PORT: import_zod.z.coerce.number().default(3e3)
 });
 var _env = envSchema.safeParse(process.env);
 if (!_env.success) {
@@ -59,11 +60,12 @@ if (!_env.success) {
 var env = _env.data;
 
 // src/database.ts
+var conn = env.DB_CLIENT === "sqlite" ? {
+  filename: env.DB_URL
+} : env.DB_URL;
 var config2 = {
-  client: "sqlite",
-  connection: {
-    filename: env.DB_URL
-  },
+  client: env.DB_CLIENT,
+  connection: conn,
   useNullAsDefault: true,
   migrations: {
     extension: "ts",
