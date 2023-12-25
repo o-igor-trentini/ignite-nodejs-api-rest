@@ -2,5 +2,8 @@ import { env } from './env'
 import { app } from './app'
 
 app
-  .listen({ port: env.HOST_PORT })
+  .listen({
+    host: 'RENDER' in process.env ? '0.0.0.0' : 'localhost',
+    port: env.PORT,
+  })
   .then(() => console.log('Servidor executando!'))
