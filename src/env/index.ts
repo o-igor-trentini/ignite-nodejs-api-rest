@@ -7,7 +7,8 @@ else config({ path: '.env' })
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('production'),
   DB_URL: z.string(),
-  HOST_PORT: z.number().default(3000),
+  DB_CLIENT: z.enum(['sqlite', 'pg']),
+  HOST_PORT: z.coerce.number().default(3000),
 })
 
 const _env = envSchema.safeParse(process.env)
